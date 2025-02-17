@@ -1,0 +1,55 @@
+# Credit: Andrew N Jumanca
+
+```{r}
+df <- read.csv("../salary_csv.txt", header=TRUE, stringsAsFactors=FALSE)
+head(df)
+```
+
+Data has 3 types of fields, one being "other" which encompasses many possibilities: `r unique(df$field)`
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# Count total number of M and F in the dataset
+total_sex <- df %>% count(sex)
+
+for (stat in c("field", "yrdeg", "startyr", "rank", "salary")) {
+  if (stat %in% c("yrdeg", "startyr", "salary")) {
+    # Bin numeric variables
+    df <- df %>%
+      mutate(binned = cut(!!sym(stat), breaks = 5, dig.lab = 5))
+    df %>%
+      count(binned, sex) %>%
+      left_join(total_sex, by = "sex", suffix = c("", "_total")) %>%
+      mutate(prop = n / n_total * 100) %>%
+      ggplot(aes(x = binned, y = prop, fill = sex)) +
+      geom_bar(stat = "identity", position = position_dodge2(preserve = "single")) +
+      geom_text(aes(label = sprintf("%.2f%%", prop)), position = position_dodge2(width = 0.9, preserve = "single"), vjust = -0.5) +
+      labs(x = stat, y = "Proportion (%)", fill = "Sex") +
+      theme_minimal() +
+      ggtitle(paste("Proportion of", stat, "by Sex")) -> p
+    print(p)
+  } else {
+    # For categorical variables
+    df %>%
+      count(!!sym(stat), sex) %>%
+      left_join(total_sex, by = "sex", suffix = c("", "_total")) %>%
+      mutate(prop = n / n_total * 100) %>%
+      ggplot(aes(x = !!sym(stat), y = prop, fill = sex)) +
+      geom_bar(stat = "identity", position = position_dodge2(preserve = "single")) +
+      geom_text(aes(label = sprintf("%.2f%%", prop)), position = position_dodge2(width = 0.9, preserve = "single"), vjust = -0.5) +
+      labs(x = stat, y = "Proportion (%)", fill = "Sex") +
+      theme_minimal() +
+      ggtitle(paste("Proportion of", stat, "by Sex")) -> p
+    print(p)
+  }
+}
+```
+
+
+
+
+
+
+
