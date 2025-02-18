@@ -1,0 +1,158 @@
+---
+title: "Project Milestone 2"
+author: "John Tilelli"
+date: "2025-02-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+setwd("/Users/johntilelli/Library/Mobile Documents/com~apple~CloudDocs/UW MSDS/DATA 557/Course project ")
+```
+
+```{r load_data}
+
+#read raw data
+data <- readLines("salary.txt")
+
+data_trim <- trimws(data)  # Remove leading/trailing spaces & tabs
+
+
+#clean file and ensure consistent separators
+data_csv <- gsub("\\s+", ",", data_trim)  # Convert spaces & tabs to commas
+
+#write new file
+writeLines(data_csv, "salary_csv.txt")
+
+data_cleaned <- read.csv("salary_csv.txt", header=TRUE, stringsAsFactors=FALSE)
+head(data_cleaned)
+
+#validation
+#check for duplicates in ID column
+duplicates <- data_cleaned %>%
+  group_by(id) %>%
+  filter(n() > 1) %>%
+  select(id) %>%
+  distinct()
+
+```
+
+**Prompt:** 1. Generate suitable descriptive statistics of the distribution of academic field, year in which they attained their highest degree, year they were hired at the university, academic rank in 1995, and monthly salary in 1995 by sex.
+
+**Notes:**
+academic field - categorical, counts per category
+year in which they attained their highest degree 
+year they were hired at the university
+academic rank in 1995
+monthly salary in 1995 by sex
+
+to-do
+cross-tabs for m/f
+
+**Response:** 
+
+**Code:**
+```{r}
+summary(data_cleaned)
+```
+
+**Academic field:**
+
+
+```{r acamdemic_field}
+
+
+
+```
+
+```{r}
+summary(data_cleaned)
+
+#academic field
+library(dplyr)
+field_counts <- data_cleaned %>%
+  count(field, name = "count") %>%
+  arrange(desc(count))  #sort
+
+print(field_counts)
+
+library(ggplot2)
+ggplot(field_counts, aes(x = reorder(field, -count), y = count)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Number of Cases by Academic Field", x = "Academic Field", y = "Count") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate labels for readability
+
+
+#Year of Highest Degree Attained
+hist(data_cleaned$yrdeg, 
+     main="Histogram of Year of Highest Degree Attained", 
+     xlab="Year Degree Attained", 
+     col="skyblue", 
+     border="black")
+
+library(ggplot2)
+
+# Create a histogram with different colors for Male and Female
+ggplot(data_cleaned, aes(x=yrdeg, fill=sex)) +
+  geom_histogram(binwidth=5, position="identity", alpha=0.6, color="black") +
+  labs(title="Histogram of Year of Highest Degree Attained", 
+       x="Year Degree Attained", 
+       y="Frequency") +
+  scale_fill_manual(values=c("blue", "red")) +  # Male = Blue, Female = Red
+  theme_minimal()
+
+
+
+#year they were hired at the university
+hist(data_cleaned$startyr, 
+     main="Histogram of Year of Highest Degree Attained", 
+     xlab="Year hired at university", 
+     col="skyblue", 
+     border="black")
+
+rank_counts <- data_cleaned %>%
+  count(rank, name = "count") %>%
+  arrange(desc(count))  #sort
+
+library(ggplot2)
+ggplot(rank_counts, aes(x = reorder(rank, -count), y = count)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Number of Cases by Rank", x = "Academic Field", y = "Count") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+salary_male <- data_cleaned %>% filter(sex == "M") %>% pull(salary)
+salary_female <- data_cleaned %>% filter(sex == "F") %>% pull(salary)
+
+
+#histogram of salaries by male and female
+hist(salary_male, 
+     main="Salary Distribution (1995) - Male", 
+     xlab="Salary", 
+     col="blue", 
+     border="black")
+
+hist(salary_female, 
+     main="Salary Distribution (1995) - Female", 
+     xlab="Salary", 
+     col="red", 
+     border="black")
+
+
+```
+
+**Prompt:** 2. Write a paragraph commenting on any differences you observe between men and women faculty in these measurements. 
+
+**Notes:**
+summarize data loading process
+take note on the granularity of the data
+validation of load - 
+max
+min
+counts
+
+process - we will each do our own descriptive analysis and then bring the results together for tomorrow and validate our results. 
+
+```{r}
+```
