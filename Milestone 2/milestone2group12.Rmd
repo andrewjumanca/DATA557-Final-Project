@@ -51,7 +51,47 @@ for (stat in c("field", "yrdeg", "startyr", "rank", "salary")) {
 ```{r echo=FALSE}
 salary_male <- data_cleaned %>% filter(sex == "M" & year == 95) %>% pull(salary)
 salary_female <- data_cleaned %>% filter(sex == "F"& year == 95) %>% pull(salary)
- 
+highest_degree_yr_male <- data_cleaned %>% filter(sex == "M") %>% pull(yrdeg)
+highest_degree_yr_female <- data_cleaned %>% filter(sex == "F") %>% pull(yrdeg)
+start_yr_male <- data_cleaned %>% filter(sex == "M") %>% pull(startyr)
+start_yr_female <- data_cleaned %>% filter(sex == "F") %>% pull(startyr)
+
+hist(highest_degree_yr_male, 
+     main="Year Highest Degree Attained Distribution - Male", 
+     xlab="Year Highest Degree Attained", 
+     col="blue", 
+     border="black")
+
+hist(highest_degree_yr_female, 
+     main="Year Highest Degree Attained Distribution- Female", 
+     xlab="Year Highest Degree Attained", 
+     col="red", 
+     border="black")
+
+hist(start_yr_male, 
+     main="Start Year Distribution - Male", 
+     xlab="Start Year", 
+     col="blue", 
+     border="black")
+
+hist(start_yr_female, 
+     main="Start Year Distribution - Female", 
+     xlab="Start Year", 
+     col="red", 
+     border="black")
+
+hist(salary_male, 
+     main="Salary Distribution (1995) - Male", 
+     xlab="Salary", 
+     col="blue", 
+     border="black")
+
+hist(salary_female, 
+     main="Salary Distribution (1995) - Female", 
+     xlab="Salary", 
+     col="red", 
+     border="black")
+
 hist(salary_male, 
      main="Salary Distribution (1995) - Male", 
      xlab="Salary", 
@@ -66,6 +106,8 @@ hist(salary_female,
 ```
 
 ### Analysis
+Before starting our analysis, we first needed to injest the data. The raw data contained a mixture of tabs and spaces as delimeters. Additionally, each line started with some number of spaces. Our cleaning process started with a trimming function to eliminate spaces at the start or end of the row. Then we used a simple regex command to replace all potential delimeters with commas for easier injestion.
+
 The above analysis is meant to serve as a starting point before our team dives deeper into more meaningful statistical 
 analysis to determine whether or not there is a difference in salary between male and female college professors. When 
 splitting the data by field, 'other' accounts for nearly 70% of both male and female college professors. 20% of females 
@@ -78,3 +120,22 @@ professors, while only 50% of males are in one of these two ranks. The other hal
 only 25% of females are full professors. Finally, it appears that males tend to make more than females in this data 
 set, when not controlling for any factors. The top quartile of females begins at $4951 monthly, compared to that of 
 the males which begin at $6040 monthly.
+
+```{r, echo=FALSE}
+#Code block to comment out potential revisions on summary:
+#For the categorical variables, our team focused on finding frequency counts and proportions. To reflect those statistics, we often used bar charts. 
+#For the numerical variables, we looked at mean, median and mode to find the central tendency when comparing men to women. To analyze the dispersion of the data, we looked at the range, variance, standard deviation, and skew. To demonstrate the distribution of these numerical values, we looked at stacked histograms and then separated histograms filtered just on men and women.
+```
+
+# Appendix 
+
+This report was generated in R Markdown. The code chunks for each section have been hidden and a section below will display all code chunks together.
+
+
+```{r, ref.label=knitr::all_labels(),echo=TRUE,eval=FALSE}
+for (label in knitr::all_labels()) {
+  cat("\n\n### Chunk: `", label, "`\n\n", sep = "")
+  knitr::knit_code$get(label) |> cat(sep = "\n")
+  cat("\n\n")
+}
+```
