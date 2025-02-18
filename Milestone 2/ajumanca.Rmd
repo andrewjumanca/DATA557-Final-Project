@@ -47,6 +47,19 @@ for (stat in c("field", "yrdeg", "startyr", "rank", "salary")) {
 }
 ```
 
+### Analysis
+The above analysis is meant to serve as a starting point before our team dives deeper into more meaningful statistical 
+analysis to determine whether or not there is a difference in salary between male and female college professors. When 
+splitting the data by field, 'other' accounts for nearly 70% of both male and female college professors. 20% of females 
+and 12% of males are in the 'arts' field and 10% of females and 22% of males are in the 'prof' field. When looking at the 
+year in which each professor attained their highest degree, the distribution for males and females is quite similar and 
+normally distributed around 1968 for males and 1977 for females. When it comes to start year, women start quite a bit 
+later than men in this data set. The male's average start year is 1975, while the female's is 1980. Looking at rank, 
+when grouped by sex, is quite interesting. Slightly more than two-thirds of females are either assistant or associate 
+professors, while only 50% of males are in one of these two ranks. The other half of men are full professors, while 
+only 25% of females are full professors. Finally, it appears that males tend to make more than females in this data 
+set, when not controlling for any factors. The top quartile of females begins at $4951 monthly, compared to that of 
+the males which begin at $6040 monthly.
 
 
 
