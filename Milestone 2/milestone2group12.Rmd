@@ -49,8 +49,8 @@ for (stat in c("field", "yrdeg", "startyr", "rank", "salary")) {
 
 #### Salary distributions evaluated by sex, separately
 ```{r echo=FALSE}
-salary_male <- df %>% filter(sex == "M") %>% pull(salary)
-salary_female <- df %>% filter(sex == "F") %>% pull(salary)
+salary_male <- data_cleaned %>% filter(sex == "M" & year == 95) %>% pull(salary)
+salary_female <- data_cleaned %>% filter(sex == "F"& year == 95) %>% pull(salary)
  
 hist(salary_male, 
      main="Salary Distribution (1995) - Male", 
