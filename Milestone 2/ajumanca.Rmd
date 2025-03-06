@@ -16,35 +16,42 @@ total_sex <- df %>% count(sex)
 
 for (stat in c("field", "yrdeg", "startyr", "rank", "salary")) {
   if (stat %in% c("yrdeg", "startyr", "salary")) {
-    # Bin numeric variables
     df <- df %>%
       mutate(binned = cut(!!sym(stat), breaks = 5, dig.lab = 5))
     df %>%
-      count(binned, sex) %>%
+      count(binned, sex, year_group = case_when(
+        year >= 67 & year <= 86 ~ "67-86",
+        year >= 87 & year <= 95 ~ "87-95",
+        TRUE ~ "Other"
+      )) %>%
       left_join(total_sex, by = "sex", suffix = c("", "_total")) %>%
-      mutate(prop = n / n_total * 100) %>%
-      ggplot(aes(x = binned, y = prop, fill = sex)) +
+      mutate(prop = n / n_total) %>%
+      ggplot(aes(x = binned, y = prop, fill = interaction(sex, year_group))) +
       geom_bar(stat = "identity", position = position_dodge2(preserve = "single")) +
-      geom_text(aes(label = sprintf("%.2f%%", prop)), position = position_dodge2(width = 0.9, preserve = "single"), vjust = -0.5) +
-      labs(x = stat, y = "Proportion (%)", fill = "Sex") +
+      geom_text(aes(label = sprintf("%.2f", prop)), position = position_dodge2(width = 0.9, preserve = "single"), vjust = -0.5, size = 3) +
+      labs(x = stat, y = "Proportion", fill = "Sex and Year Group") +
       theme_minimal() +
-      ggtitle(paste("Proportion of", stat, "by Sex")) -> p
+      ggtitle(paste("Proportion of", stat, "by Sex and Year Group")) -> p
     print(p)
   } else {
-    # For categorical variables
     df %>%
-      count(!!sym(stat), sex) %>%
+      count(!!sym(stat), sex, year_group = case_when(
+        year >= 67 & year <= 86 ~ "67-86",
+        year >= 87 & year <= 95 ~ "87-95",
+        TRUE ~ "Other"
+      )) %>%
       left_join(total_sex, by = "sex", suffix = c("", "_total")) %>%
-      mutate(prop = n / n_total * 100) %>%
-      ggplot(aes(x = !!sym(stat), y = prop, fill = sex)) +
+      mutate(prop = n / n_total) %>%
+      ggplot(aes(x = !!sym(stat), y = prop, fill = interaction(sex, year_group))) +
       geom_bar(stat = "identity", position = position_dodge2(preserve = "single")) +
-      geom_text(aes(label = sprintf("%.2f%%", prop)), position = position_dodge2(width = 0.9, preserve = "single"), vjust = -0.5) +
-      labs(x = stat, y = "Proportion (%)", fill = "Sex") +
+      geom_text(aes(label = sprintf("%.2f", prop)), position = position_dodge2(width = 0.9, preserve = "single"), vjust = -0.5, size = 3) +
+      labs(x = stat, y = "Proportion", fill = "Sex and Year Group") +
       theme_minimal() +
-      ggtitle(paste("Proportion of", stat, "by Sex")) -> p
+      ggtitle(paste("Proportion of", stat, "by Sex and Year Group")) -> p
     print(p)
   }
 }
+
 ```
 
 ### Analysis
