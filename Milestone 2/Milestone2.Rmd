@@ -1,11 +1,31 @@
-## Group 12 Milestone 2
+---
+title: "Milestone 2"
+author: "Group 12"
+output:
+  html_document: default
+---
 
 #### Descriptive Statistics:
 
 ```{r echo=FALSE, message=FALSE}
-df <- read.csv("../salary_csv.txt", header=TRUE, stringsAsFactors=FALSE)
+df <- read.table("salary.txt", header = TRUE, sep = "", stringsAsFactors = FALSE)
 head(df)
 ```
+
+```{r echo=FALSE, message=FALSE}
+df_male <- subset(df, sex == "M")
+df_female <- subset(df, sex == "F")
+```
+
+#### Male Statistics
+```{r echo=FALSE, message=FALSE}
+print(summary(df_male))
+```
+#### Female Statistics 
+```{r, echo = FALSE, message= FALSE}
+print(summary(df_female))
+```
+
 
 ```{r echo=FALSE, warning = FALSE, message=FALSE}
 library(ggplot2)
@@ -49,6 +69,7 @@ for (stat in c("field", "yrdeg", "startyr", "rank", "salary")) {
 
 #### Salary distributions evaluated by sex, separately
 ```{r echo=FALSE}
+data_cleaned <- df
 salary_male <- data_cleaned %>% filter(sex == "M" & year == 95) %>% pull(salary)
 salary_female <- data_cleaned %>% filter(sex == "F"& year == 95) %>% pull(salary)
 highest_degree_yr_male <- data_cleaned %>% filter(sex == "M") %>% pull(yrdeg)
