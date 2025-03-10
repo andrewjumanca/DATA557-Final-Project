@@ -1,0 +1,61 @@
+h1, h2, h3 span {
+    margin-bottom:9px;
+    font-family:"Arial", sans-serif;
+    font-variant: small-caps;
+    font-weight:bold;
+    line-height:1.00em;
+    letter-spacing:0.3px;
+    }
+    
+    h4, h5, h6 span {
+    
+    font-family:"helvetica", sans-serif;
+    line-height:1.00em;
+    letter-spacing:0.3px;
+    }
+    
+    .navbar .navbar-nav {
+            float: right; 
+            color: white; 
+            font-size: 20px;
+            font-weight: bold;
+          } 
+    .navbar.navbar-default.navbar-static-top {
+      border: 1px solid white;
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+    .navbar .navbar-header {
+      float: left;
+      color: white; 
+      font-size: 38px;
+      font-weight: bold;
+      font-variant: small-caps;
+    } 
+    .navbar-default .navbar-brand {
+      color: white; 
+      font-size: 38px; 
+      text-shadow: 2px 2px orange;
+    }
+    .gwt-Frame {
+      left: 50px;
+      right: 50px;
+      bottom: 50px;
+      top: 50px;
+    }
+    
+    body {
+      padding-top: 40px;
+      padding-right: 50px;
+      padding-bottom: 80px;
+      padding-left: 50px;
+    }
+    
+    .main-svg {
+      border: 3px solid orange;
+    }
+    
+    .well {
+      border: 3px solid white;
+    }
+    
