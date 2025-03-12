@@ -1,0 +1,77 @@
+---
+title: "Gender Bias in Promotions: Associate to Full Professor"
+author: "Andrew Jumanca"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(dplyr)
+library(ggplot2)
+library(boot)
+```
+
+## Data Preparation
+This dataset tracks faculty members ranks over time to assess whether gender bias exists in promotions from Associate to Full Professor.
+
+```{r}
+data <- read.csv("salary_csv.txt")
+
+# Filter to Associate Professors only, tracking promotion to Full Professor
+data <- data %>% 
+  filter(rank %in% c("Assoc", "Full")) %>%
+  group_by(id) %>%
+  mutate(promoted = as.integer("Full" %in% rank & "Assoc" %in% rank)) %>%
+  ungroup()
+```
+
+## Logistic Regression: Predicting Promotion Probability
+Logistic regression is appropriate because promotion is a binary outcome. This model assesses the impact of gender while controlling for other factors.
+
+```{r}
+logit_model <- glm(promoted ~ sex + field + admin + deg + salary, data = data, family = binomial)
+summary(logit_model)
+```
+
+## Two-Sample Z-Test: Promotion Rates by Gender
+A Z-test is useful for comparing proportions between two independent groups. Here, we compare the promotion rates of male and female faculty members.
+
+```{r}
+n_f <- sum(data$sex == "F")
+n_m <- sum(data$sex == "M")
+p_f <- mean(data$promoted[data$sex == "F"])
+p_m <- mean(data$promoted[data$sex == "M"])
+se <- sqrt((p_f * (1 - p_f) / n_f) + (p_m * (1 - p_m) / n_m))
+z_score <- (p_f - p_m) / se
+p_value <- 2 * pnorm(-abs(z_score))
+list(z_score = z_score, p_value = p_value)
+```
+
+## Bootstrapping: Gender and Promotion Rate
+Bootstrapping resamples the dataset to estimate the variability in promotion rates. This method is useful when making inferences about small sample sizes.
+
+```{r}
+promotion_rate <- function(data, indices) {
+  d <- data[indices, ]
+  mean(d$promoted[d$sex == "F"]) - mean(d$promoted[d$sex == "M"])
+}
+boot_res <- boot(data, promotion_rate, R = 1000)
+boot_res$t0
+```
+
+## ANOVA: Gender & Other Factors on Salary
+ANOVA tests for differences in means across multiple groups. Here, we assess whether gender and other factors significantly affect salary.
+
+```{r}
+aov_model <- aov(salary ~ sex + field + admin + deg, data = data)
+summary(aov_model)
+```
+
+## Trends Over Time: Promotion Rates by Decade
+Visualizing trends over time helps determine whether gender disparities in promotion have changed across different decades.
+
+```{r}
+data <- data %>% mutate(decade = floor((year + 1900) / 10) * 10)
+ggplot(data, aes(x = as.factor(decade), fill = sex)) +
+  geom_bar(position = "fill") +
+  labs(title = "Promotion Rates by Decade and Gender", y = "Proportion Promoted", x = "Decade")
+```
