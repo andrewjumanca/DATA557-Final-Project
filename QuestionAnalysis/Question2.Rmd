@@ -1,0 +1,128 @@
+
+Question 2: Has sex bias existed in the starting salaries of faculty members (salaries in the year hired)?
+
+```{r}
+df <- read.table("SalaryAnalysis/salary.txt", header = TRUE, sep = "", stringsAsFactors = FALSE)
+```
+
+```{r}
+df_male <- subset(df, sex == "M")
+df_female <- subset(df, sex == "F")
+```
+
+Filter by start year
+```{r}
+df_starting <- df[df$year == df$startyr, ]
+```
+
+Create Dist from Degree Variable 
+```{r}
+df_starting$dist_from_degree <- df_starting$startyr - df_starting$yrdeg
+```
+
+Examine Difference Between Men and Women Salaries Using Box Plots 
+```{r}
+library(ggplot2)
+
+ggplot(df_starting, aes(x = sex, y = salary, fill = sex)) +
+  geom_boxplot() +
+  labs(title = "Starting Salary Distribution by Sex",
+       x = "Sex",
+       y = "Starting Salary") +
+  scale_fill_manual(values = c("blue", "pink")) +  # Customize colors
+  theme_minimal()
+```
+Far more outliers on the M side of things, but similar means and distributions during starting years. 
+
+Null Hypothesis: There is no difference between the salaries of men and women in starting year
+Alternative Hypothesis: There is a difference between the salaries of men and women in starting year 
+```{r}
+t.test(salary ~ sex, data = df_starting, var.equal = TRUE) 
+```
+Based on a two sample t-test, reject the null hypothesis that there is no difference in salary between men and women in 1995. Now that we know there is a difference in salary between the two groups, let us examine further if sex bias exists. 
+
+Linear Regression modeling salary as a function of sex, low percentage of variance explained by sex only, but statistically significant 
+```{r}
+lm_model <- lm(salary ~ sex, data = df_starting)
+summary(lm_model)
+```
+
+Linear Regression modeling salary as a function of sex, accounting for  deg, field, rank, admin
+```{r}
+lm_model_2 <- lm(salary ~ sex + deg + field + rank + admin, data = df_starting)
+summary(lm_model_2)
+```
+
+Linear Regression modeling salary as a function of sex, accounting for field, rank, admin, dist_from_degree
+```{r}
+lm_model_3 <- lm(salary ~ sex + field + rank + admin + dist_from_degree, data = df_starting)
+summary(lm_model_3)
+```
+
+When you begin accounting for other variables, sex no longer is statistically significant to the model, interestingly. 
+
+Check constant Variance Assumption part 1
+```{r, echo=FALSE}
+plot(lm_model_3$fitted.values, resid(lm_model_3),
+     xlab = "Fitted Values", ylab = "Residuals",
+     main = "Residuals vs. Fitted Values")
+abline(h = 0, col = "red")
+```
+Check Constant Variance Assumption part 2
+```{r, echo =FALSE}
+qqnorm(resid(lm_model_3))
+```
+
+Check if interaction between sex and other significant variables produces any significance.
+```{r}
+lm_model_4 <- lm(salary ~ sex * field + sex * rank + admin + dist_from_degree, data = df_starting)
+summary(lm_model_4)
+
+```
+
+Interaction terms when futher considering sex remain non-significant -- evidence that there is no discrimination taking place during start year. 
+
+```{r}
+ggplot(df_starting, aes(x = startyr, y = salary, color = sex)) +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(title = "Starting Salary Trends Over Time by Sex", x = "Hiring Year", y = "Starting Salary")
+```
+
+Men's and Women's salaries, although different, do increase at a similar rate, further supporting that discrimination does not exist. 
+
+
+```{r}
+ggplot(df_starting, aes(x = rank, fill = sex)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Distribution of Academic Rank by Sex", x = "Rank", y = "Count")
+```
+
+## Comparing Models 
+```{r}
+library(sjPlot)
+
+tab_model(lm_model, lm_model_2, lm_model_3, lm_model_4,
+          show.ci = FALSE,  # Hide confidence intervals
+          show.std = TRUE,  # Show standardized coefficients
+          show.se = TRUE,   # Show standard errors
+          dv.labels = c("Starting Salary"))
+```
+
+
+### Disregard, Just Looking Into Something -- Not part of Project
+
+
+Potentially a rank issue -- women are hired into associate or full positions far less frequently.
+```{r}
+df_starting_1 <- df_starting
+df_starting_1$rank <- as.numeric(factor(df_starting$rank, levels = c("Assist", "Assoc", "Full"), ordered = TRUE))
+```
+
+
+```{r}
+lm_rank <- lm(rank ~ startyr + dist_from_degree + sex * field, data = df_starting_1)
+summary(lm_rank)
+```
+
+
+
