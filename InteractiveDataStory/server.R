@@ -75,18 +75,18 @@ load_and_prepare_data_q3_agg <- function(file_path) {
 
 server <- function(input, output) {
   #load aggregated data
-  final_aggregated_data <- reactive({
-    load_and_prepare_data("InteractiveDataStory/salary.txt")
+  data_agg <- reactive({
+    load_and_prepare_data_q3_agg("InteractiveDataStory/salary.txt")
   })
   
   #show head of aggregated data
   output$aggregatedDataHead <- renderPrint({
-  print(head(final_aggregated_data))
+  print(head(data_agg()))
   })
   
   #function to load density plot of final_aggregated_data
   output$salaryDensityPlot <- renderPlot({
-    ggplot(final_aggregated_data, aes(x = percent_increase, fill = sex)) +
+    ggplot(data_agg(), aes(x = percent_increase, fill = sex)) +
       geom_density(alpha = 0.5) +
       labs(
         title = "Distribution of Salary Increase by Sex",
@@ -100,7 +100,7 @@ server <- function(input, output) {
   output$regressionSummaryModelPercent <- renderPrint({
     model_percent <- lm(
       percent_increase ~ sex + admin_any + deg + field + highest_rank  + experience + total_years,
-      data = data
+      data = data_agg()
     )
     summary(model_percent)
     confint(model_percent)
