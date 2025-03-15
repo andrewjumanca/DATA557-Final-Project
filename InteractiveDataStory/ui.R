@@ -14,37 +14,52 @@ ui <- fluidPage(
 
 
 
-    tabPanel("2",
-      h3("Has sex bias existed in the starting salaries of faculty members (salaries in the year
+    tabPanel("2", style = "background-color: #f1f1f1;",
+      h3(class = 'tab-title', "Has sex bias existed in the starting salaries of faculty members (salaries in the year
 hired)?"),
-      
+      p('The following page uses a variety of analysis techniques to understand if sex bias existed in the starting salaries of faculty members. 
+      First, we understand set out to understand the data. Through the use of visualizations and tables, our team built an understanding of the starting salary data
+      that was available to us. We then used statistical tests, such as a two sample t-test, to establish if there was in fact a difference between the starting salaries
+      of males and females. The results of this test showed there was a difference in starting salaries between males and females, which led us to conduct multiple linear regressions.
+      The results of the above process can be found below.'),
+
       fluidRow(
         column(6, 
-          img(src = "BoxPlotsStartingYearSalary.png", height = "400px"),
-          p("This plot shows the starting salaries of faculty members by gender. The data suggests some differences in salary between male and female faculty in their first year.")
+          img(src = "BoxPlotsStartingYearSalary.png", height = "300px", style = "border: 2px solid black; margin: 20px;", align = 'center'),
+          p("This plot shows the starting salaries of faculty members by gender. The box plot shows that the mean for each group is quite similar, though males have 
+          far more outliers past the 3rd quartile.")
         ),
         column(6, 
-          img(src = "HistogramStartingYear.png", height = "400px"),
-          p("This plot compares the starting salaries across different departments, highlighting the variations in salary distributions.")
+          img(src = "HistogramStartingYear.png", height = "300px", style = "border: 2px solid black; margin: 20px;", align = 'center'),
+          p("To further understand the underlying data, this bar chart shows the counts associated with multiple salary bands. It is clear again that there are far more outliers in
+          the male group. ")
         )
       ),
       
       br(),
-      img(src = "Question2MultipleRegression.png", height = "400px"),
-      p('Using multiple regressions allows us to ...'),
+      img(src = "Question2MultipleRegression.png", height = "475px", style = "border: 2px solid black; margin: 20px;", align = 'center'),
+      p('After conducting a two sample t-test and deteriming there was a difference between male and female starting salary, we fit 4 linear regression models to test multiple 
+      hypothesis about the factors which were causing the observed difference. We first fit a model with salary as the outcome and sex as the predictor. Then we added factors which
+      our team thought may be contributing to the difference. The following regressions are shown in the table as well as their results. Of note, when accounting for variables such as
+      field, rank, and degree, we found that the stastical significance of sex vanishes. That is to say, we cannot reject the null hypothesis that sex has no effect on salary in each
+      model where we account for predictors beyond sex.'),
       br(),
 
+      p('Our team wanted to make sure that our assumptions were met for our linear models. In the below plots we use model 3 to check for normality, linearity, and constant variance.'),
       fluidRow(
         column(6, 
-          img(src = "QQPlot.png", height = "400px"),
-          p("Looking at the QQ Plot for Model 3, as an example, allows us to confirm that our constant variance assumption and normality assumption are met. ")
+          img(src = "QQPlot.png", height = "300px", style = "border: 2px solid black; margin: 20px;", align = 'center'),
+          p("Looking at the QQ Plot for Model 3, as an example, allows us to confirm that our normality assumption is met. ")
         ),
         column(6, 
-          img(src = "ResidualsVFitted.png", height = "400px"),
-          p("Test")
+          img(src = "ResidualsVFitted.png", height = "300px", style = "border: 2px solid black; margin: 20px;", align = 'center'),
+          p("Looking at the Residuals vs Fitted Values plot for Model 3, allows us to confirm that our linearity and constant variance assumptions are met."),
         )
       ),
 
+      br(),
+      p('All of the above analysis is simply to say that we do cannot attribute the difference in salary between male and female faculty members to sex.'),
+    
     ),
 
 
