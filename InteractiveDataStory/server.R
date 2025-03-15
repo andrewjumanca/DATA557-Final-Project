@@ -1,39 +1,7 @@
 library(shiny)
 
-server <- function(input, output) {
-  data <- reactive({
-    load_and_prepare_data("InteractiveDataStory/salary.txt")
-  })
-  #function to load density plot
-  output$salaryDensityPlot <- renderPlot({
-    data <- load_and_prepare_data("path/to/salary.txt")
-    
-    ggplot(data, aes(x = percent_increase, fill = sex)) +
-      geom_density(alpha = 0.5) +
-      labs(
-        title = "Distribution of Salary Increase by Sex",
-        x = "Percent Increase in Salary",
-        y = "Density"
-      ) +
-      theme_minimal()
-  })
-  #function to load summary table
-  output$summaryTable <- renderTable({
-    summary(data())
-  })
-  #call model summary and confidence intervals for percent increase model for question 3
-  output$regressionSummaryModelPercent <- renderPrint({
-    model_percent <- lm(
-      percent_increase ~ sex + admin_any + deg + field + highest_rank  + experience + total_years,
-      data = final_aggregated_data
-    )
-    summary(model_percent)
-    confint(model_percent)
-  })
-}
-
 #data function, placed outside of server function so that input/output functions can be called without reloading data
-load_and_prepare_data_q3 <- function(file_path) {
+load_and_prepare_data_q3_agg <- function(file_path) {
   library(dplyr)
   library(ggplot2)
   library(lmtest)
@@ -101,4 +69,40 @@ load_and_prepare_data_q3 <- function(file_path) {
   final_aggregated_data$field <- factor(final_aggregated_data$field, levels = c("Arts", "Prof", "Other"))
   final_aggregated_data$deg <- factor(final_aggregated_data$deg, levels = c("Other", "PhD", "Prof"))
   final_aggregated_data$admin_any <- as.factor(final_aggregated_data$admin_any)
+  
+  return(final_aggregated_data)
+}
+
+server <- function(input, output) {
+  #load aggregated data
+  final_aggregated_data <- reactive({
+    load_and_prepare_data("InteractiveDataStory/salary.txt")
+  })
+  
+  #show head of aggregated data
+  output$aggregatedDataHead <- renderPrint({
+  print(head(final_aggregated_data))
+  )}
+  
+  #function to load density plot of final_aggregated_data
+  output$salaryDensityPlot <- renderPlot({
+    ggplot(final_aggregated_data, aes(x = percent_increase, fill = sex)) +
+      geom_density(alpha = 0.5) +
+      labs(
+        title = "Distribution of Salary Increase by Sex",
+        x = "Percent Increase in Salary",
+        y = "Density"
+      ) +
+      theme_minimal()
+  })
+  
+  #call model summary and confidence intervals for percent increase model for question 3
+  output$regressionSummaryModelPercent <- renderPrint({
+    model_percent <- lm(
+      percent_increase ~ sex + admin_any + deg + field + highest_rank  + experience + total_years,
+      data = data
+    )
+    summary(model_percent)
+    confint(model_percent)
+  })
 }
