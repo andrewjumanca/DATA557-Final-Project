@@ -82,7 +82,7 @@ server <- function(input, output) {
   #show head of aggregated data
   output$aggregatedDataHead <- renderPrint({
   print(head(final_aggregated_data))
-  )}
+  })
   
   #function to load density plot of final_aggregated_data
   output$salaryDensityPlot <- renderPlot({
