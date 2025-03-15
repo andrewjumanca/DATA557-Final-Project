@@ -70,9 +70,32 @@ hired)?"),
       h4("Data Prep"),
       p("To start, we filter the data to the 6 years of interest. Then, we aggregate the data on the id in order to treat each individual as an observation. To calculate the percent increase, we subtract the last salary observed by the first and divide by the first salary. We finally remove any observations with no increase. In order to capture the over time effects of rank and admin duties, we take the max admin duty and highest rank during the time period."),
       verbatimTextOutput("aggregatedDataHead"),
+      h4("Data Exploration"),
       p("To visualize the difference in salary growth between men and women, we plot density curves of percent increases by women and men and observe that there is substantial overlap in the curves. There is a noted difference in the peak of the distribution, with more women seeing increases in salary. "),
       plotOutput("salaryDensityPlot"),
-      verbatimTextOutput("regressionSummaryModelPercent")        
+      h4("Multiple linear regression with percent increase in salary as outcome"),
+      p("Next, we fit a multiple linear regression with percent increase as the outcome and sex, administrative duties, degree, field, rank, experience, and total years observed. Interestingly, the model suggests that men had on lower average increases in salary that was significant at the .10 level when controlling for the other factors. The model showed strong statistical significance in the controlling factors for administrative duties, rank, and total observations.  The models r^2 score shows that it captured 26.95% of the variability of the data. Referenced below are the confidence intervals of the the predictor variables. These intervals can be interpretted to say that we are 95% confidence that the factor increased salary growth by between between the interval. 
+The key findings are as follows: 
+1. Male faculty had lower percent increases than women.
+2. Promotions to higher rank (Associate and Full) are strongly associated with higher salary increases.
+3. Professional degrees are associated with smaller raises due to higher starting salaries.
+4. More experienced faculty tend to have smaller percent increases 
+5. Having an administrative role significantly increases percent increases in salary.
+6. Professional fields show smaller percentage increases
+7. Total observations: More observations is strongly associated with larger percent increases"),
+      verbatimTextOutput("regressionSummaryModelPercent"),
+      verbatimTextOutput("regressionConfModelPercent"),
+      h4("Analyzing impact of salary gap"),
+      p("Given the interesting results of the model, we decided to investigate if the results are due to men starting at higher salaries. We also want to follow up from the first model on experienced faculty tend to have smaller percent increases consistent with diminishing returns over time. 
+First we plot the average salary by sex over the time period. It is clear that the average salary is much higher for men than women."),
+      #head new data
+      plotOutput("plotNewDataLineChart"),
+      h4("Multiple regression using interaction between sex and year"),
+      p("For the next model, instead of aggregating by individual, we instead keep the same granularity as the original data, where each year with a recorded salary for an individual. Now we fit the model with salary as the outcome and look at interaction between the year of the recorded salary and sex, while controlling for the factors of rank, degree, field, administrative duties, and experience. The model performs very well, with an r^2 of 54.18. All of our controlled variables are sigificant at the .05 level, except for our interaction between sex and year. This means that there is no statistically significant difference in annual raise rates by sex once rank, field, degree, administrative duties, and experience were accounted for. "),
+      verbatimTextOutput("summaryNewModel"),
+      verbatimTextOutput("confNewModel"),
+      h4("Conclusion"),
+      p("We can conclude from the first model that if men start with higher salaries, they might appear to have smaller percent increases even if they’re receiving larger absolute raises. The the interaction model on absolute salaries over time confirms that men and women do not get different absolute raises over time.")
     ),
     tabPanel("4",
       h3("Has sex bias existed in granting promotions from Associate to full Professor?"),
