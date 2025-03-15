@@ -1,0 +1,210 @@
+---
+title: "question 3"
+author: "John Tilelli"
+date: "2025-03-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Data
+
+### Has sex bias existed in granting salary increases between 1990 -1995??
+
+For this analysis, we are interested in assessing if sex bias exists in granting salary increases between 1990-1995. To focus this analysis, we will measure whether men and women see different percent growth. 
+
+### Data Prep
+To start, we filter the data to the 6 years of interest. Then, we aggregate the data on the id in order to treat each individual as an observation. To calculate the percent increase, we subtract the last salary observed by the first and divide by the first salary. We finally remove any observations with no increase. In order to capture the over time effects of rank and admin duties, we take the max admin duty and highest rank during the time period.
+
+To visualize the difference in salary growth between men and women, we plot density curves of percent increases by women and men and observe that there is substantial overlap in the curves. There is a noted difference in the peak of the distribution, with more women seeing increases in salary. 
+
+```{r data}
+# Load necessary libraries
+library(dplyr)
+library(ggplot2)
+library(lmtest)
+library(sandwich)
+library(stargazer)
+library(broom)
+
+
+# Import data
+file_path <- "/Users/johntilelli/Library/Mobile Documents/com~apple~CloudDocs/UW MSDS/DATA 557/Course project /salary.txt"
+data <- read.table(file_path, header = TRUE)
+
+data_filtered_on_year <- data %>%
+  filter(year >= 90 & year <= 95)
+
+```
+
+
+
+```{r aggregated}
+# Load necessary libraries
+library(dplyr)
+
+# Import dataset
+
+aggregated_data <- data_filtered_on_year %>%
+  group_by(id) %>%
+  summarise(
+    sex = first(sex),       # Sex remains constant for each individual
+    deg = first(deg),       # Highest degree is constant
+    yrdeg = first(yrdeg),   # Year highest degree was earned
+    field = first(field),   # Field of expertise remains constant
+    startyr = first(startyr) # Year of hire remains the same
+  )
+
+
+dynamic_data <- data_filtered_on_year %>%
+  group_by(id) %>%
+  summarise(
+    avg_salary = mean(salary, na.rm = TRUE),  # Average salary across years 1990-1995
+    min_salary = min(salary, na.rm = TRUE),   # Minimum salary in the period
+    max_salary = max(salary, na.rm = TRUE),   # Maximum salary in the period
+    last_salary = salary[which.max(year)],    # Salary in 1995
+    first_salary = salary[which.min(year)],   # Salary in 1990
+    percent_increase = ((last_salary - first_salary) / first_salary) * 100, # Salary growth %
+    admin_any = max(admin),                   # Whether they ever had an admin role (1 = Yes, 0 = No)
+    total_years = n_distinct(year),            # Number of years observed in dataset (should be 6 for most)
+    last_year = year[which.max(year)]
+  )
+
+
+rank_data <- data_filtered_on_year %>%
+  group_by(id) %>%
+  summarise(
+    highest_rank = case_when(
+      any(rank == "Full") ~ "Full",
+      any(rank == "Assoc") ~ "Assoc",
+      TRUE ~ "Assist"
+    )
+  )
+
+final_aggregated_data <- aggregated_data %>%
+  left_join(dynamic_data, by = "id") %>%
+  left_join(rank_data, by = "id")
+
+final_aggregated_data <- final_aggregated_data  %>% 
+  filter(!is.na(percent_increase)) %>%
+  filter(percent_increase != 0) 
+
+# Create an experience variable (years since highest degree)
+final_aggregated_data$experience <- final_aggregated_data$last_year - final_aggregated_data$startyr
+final_aggregated_data$experience <- ifelse(final_aggregated_data$experience < 0, 0, final_aggregated_data$experience)
+
+# Convert categorical variables to factors
+final_aggregated_data$sex <- factor(final_aggregated_data$sex, levels = c("F", "M"))
+final_aggregated_data$highest_rank <- factor(final_aggregated_data$highest_rank, levels = c("Assist", "Assoc", "Full"))
+final_aggregated_data$field <- factor(final_aggregated_data$field, levels = c("Arts", "Prof", "Other"))
+final_aggregated_data$deg <- factor(final_aggregated_data$deg, levels = c("Other", "PhD", "Prof"))
+final_aggregated_data$admin_any <- as.factor(final_aggregated_data$admin_any)
+
+# Display final dataset
+print(head(final_aggregated_data))
+
+ggplot(final_aggregated_data, aes(x = sex, y = percent_increase)) +
+  geom_point(alpha = 0.6) +  # Scatterplot points
+  geom_smooth(method = "lm", se = TRUE, color = "blue") +  # Linear model fit
+  labs(title = "Percent Increase in Salary by Sex",
+       x = "Sex",
+       y = "Percent Increase in Salary")
+
+ggplot(final_aggregated_data, aes(x = percent_increase, fill = sex)) +
+  geom_density(alpha = 0.5) +
+  labs(title = "Distribution of Salary Increase by Sex",
+       x = "Percent Increase in Salary",
+       y = "Density") +
+  theme_minimal()
+```
+
+Next, we fit a multiple linear regression with percent_increase as the outcome and sex, administrative duties, degree, field, rank, experience, and total years observed. Interestingly, the model suggests that men had on lower average increases in salary that was significant at the .10 level when controlling for the other factors. The model showed strong statistical significance in the controlling factors for administrative duties, rank, and total observations.  The models r^2 score shows that it captured 26.95% of the variability of the data. Referenced below are the confidence intervals of the the predictor variables. These intervals can be interpretted to say that we are 95% confidence that the factor increased salary growth by between between the interval. 
+
+The key findings are as follows: 
+1. Male faculty had lower percent increases than women.
+2. Promotions to higher rank (Associate and Full) are strongly associated with higher salary increases.
+3. Professional degrees are associated with smaller raises due to higher starting salaries.
+4. More experienced faculty tend to have smaller percent increases 
+5. Having an administrative role significantly increases percent increases in salary.
+6. Professional fields show smaller percentage increases
+7. Total observations: More observations is strongly associated with larger percent increases
+
+```{r aggregated_lm}
+model_percent <- lm(
+  percent_increase ~ sex + admin_any + deg + field + highest_rank  + experience + total_years,
+  data = final_aggregated_data
+)
+
+# Display model summary
+summary(model_percent)
+
+confint(model_percent)
+
+```
+
+Given the interesting results of the model, we decided to investigate if the results are due to men starting at higher salaries. We also want to follow up from the first model on experienced faculty tend to have smaller percent increases consistent with diminishing returns over time. 
+
+First we plot the average salary by sex over the time period. It is clear that the average salary is much higher for men than women.
+
+
+```{r}
+#remove individuals with only 1 observation
+new_data <- data_filtered_on_year %>%
+  group_by(id) %>%
+  filter(n() > 1) %>%
+  ungroup()
+
+# Create a year-centered variable (base year = 1990)
+new_data$year_c <- new_data$year - 90
+
+# Create an experience variable (years since highest degree)
+new_data$experience <- new_data$year - new_data$yrdeg
+new_data$experience <- ifelse(new_data$experience < 0, 0, new_data$experience)
+
+# Convert categorical variables to factors
+new_data$sex <- factor(new_data$sex, levels = c("F", "M"))
+new_data$rank <- factor(new_data$rank, levels = c("Assist", "Assoc", "Full"))
+new_data$field <- factor(new_data$field, levels = c("Arts", "Prof", "Other"))
+new_data$deg <- factor(new_data$deg, levels = c("Other", "PhD", "Prof"))
+#new_data$admin <- as.factor(new_data$admin)
+```
+
+
+```{r eda}
+summary_stats <- new_data %>%
+  group_by(year, sex) %>%
+  summarize(avg_salary = mean(salary), .groups = "drop")
+
+
+ggplot(summary_stats, aes(x = year, y = avg_salary, color = sex)) +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
+  labs(title = "Average Salary by Sex (1990–1995)", x = "Year", y = "Average Salary") +
+  theme_minimal()
+
+
+```
+
+For the next model, instead of aggregating by individual, we instead keep the same granularity as the original data, where each year with a recorded salary for an individual. Now we fit the model with salary as the outcome and look at interaction between the year of the recorded salary and sex, while controlling for the factors of rank, degree, field, administrative duties, and experience. The model performs very well, with an r^2 of 54.18. All of our controlled variables are sigificant at the .05 level, except for our interaction between sex and year. This means that there is no statistically significant difference in annual raise rates by sex once rank, field, degree, administrative duties, and experience were accounted for. 
+
+
+```{r lm}
+model <- lm(
+  salary ~ year_c * sex + rank + deg + field + admin + experience,
+  data = new_data
+)
+
+# Display summary
+summary(model)
+
+coeftest(model, vcov = vcovHC(model, type = "HC1"))
+
+confint(model)
+
+coefficients <- tidy(model)
+```
+
+We can conclude from the first model that if men start with higher salaries, they might appear to have smaller percent increases even if they’re receiving larger absolute raises. The the interaction model on absolute salaries over time confirms that men and women do not get different absolute raises over time.
+
