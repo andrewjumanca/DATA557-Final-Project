@@ -66,7 +66,12 @@ hired)?"),
 
     tabPanel("3",
       h3("Has sex bias existed in granting salary increases between 1990 -1995?"),
-      p("Empty.")
+      p("For this analysis, we are interested in assessing if sex bias exists in granting salary increases between 1990-1995. To focus this analysis, we will measure whether men and women see different percent growth. "),
+      h4("Data Prep"),
+      p("To start, we filter the data to the 6 years of interest. Then, we aggregate the data on the id in order to treat each individual as an observation. To calculate the percent increase, we subtract the last salary observed by the first and divide by the first salary. We finally remove any observations with no increase. In order to capture the over time effects of rank and admin duties, we take the max admin duty and highest rank during the time period."),
+      p("To visualize the difference in salary growth between men and women, we plot density curves of percent increases by women and men and observe that there is substantial overlap in the curves. There is a noted difference in the peak of the distribution, with more women seeing increases in salary. "),
+      plotOutput("salaryDensityPlot"),
+      verbatimTextOutput("regressionSummary")        
     ),
     tabPanel("4",
       h3("Has sex bias existed in granting promotions from Associate to full Professor?"),
