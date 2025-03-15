@@ -76,7 +76,7 @@ load_and_prepare_data_q3_agg <- function(file_path) {
 server <- function(input, output) {
   #load aggregated data
   data_agg <- reactive({
-    load_and_prepare_data_q3_agg("InteractiveDataStory/salary.txt")
+    load_and_prepare_data_q3_agg("salary.txt")
   })
   
   #show head of aggregated data
