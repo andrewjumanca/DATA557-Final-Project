@@ -1,6 +1,95 @@
 library(shiny)
 
 ui <- fluidPage(
+  tags$head(
+    tags$style(HTML("
+      /* Neutral background for the page */
+      body {
+        background-color: #f4f4f4;
+        font-family: 'Arial', sans-serif;
+        padding-left: 200px;
+        padding-right: 200px;
+        margin: 0;
+      }
+      
+      /* Title Panel Styling */
+      .title-panel {
+        background-color: #e0e0e0;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Tab Styling - Gradient and Modern Look */
+      .nav-tabs {
+        background: linear-gradient(90deg, #FF69B4, #325ea8); /* Gradient from pink to blue */
+        border-radius: 15px;
+        padding: 5px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-tabs > li > a {
+        background-color: #ffffff;
+        color: #333;
+        border: none;
+        border-radius: 12px;
+        padding: 10px 20px;
+        font-weight: bold;
+        font-size: 16px;
+        transition: all 0.3s ease-in-out;
+        text-transform: uppercase;
+      }
+
+      /* Hover effect for tabs */
+      .nav-tabs > li > a:hover {
+        background-color: #6f32a8;
+        color: white;
+        transform: scale(1.05);
+      }
+
+      /* Active Tab */
+      .nav-tabs > .active > a {
+        background-color: #998ea3;
+        color: #6a11cb; /* Purple accent color for active tab */
+        border: 2px solid #998ea3;
+        font-weight: bold;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Content Area Styling */
+      .content-area {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Icon in Tabs (optional) */
+      .nav-tabs > li > a:before {
+        content: '\f007'; /* Use FontAwesome icon for example */
+        color: #6a11cb;
+        font-size: 20px;
+        margin-right: 10px;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        body {
+          padding-left: 50px;
+          padding-right: 50px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        body {
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+      }
+    "))
+  ),
   titlePanel("Unequal Pay? Exploring Faculty Salaries by Gender and Rank"),
   tabsetPanel(
     tabPanel("Intro",
@@ -16,35 +105,32 @@ ui <- fluidPage(
 
     tabPanel("2", style = "background-color: #f1f1f1;",
       h3(class = 'tab-title', "Has sex bias existed in the starting salaries of faculty members (salaries in the year
-hired)?"),
+        hired)?"),
       p('The following page uses a variety of analysis techniques to understand if sex bias existed in the starting salaries of faculty members. 
-      First, we understand set out to understand the data. Through the use of visualizations and tables, our team built an understanding of the starting salary data
-      that was available to us. We then used statistical tests, such as a two sample t-test, to establish if there was in fact a difference between the starting salaries
-      of males and females. The results of this test showed there was a difference in starting salaries between males and females, which led us to conduct multiple linear regressions.
-      The results of the above process can be found below.'),
-
+         First, we understand set out to understand the data. Through the use of visualizations and tables, our team built an understanding of the starting salary data
+         that was available to us. We then used statistical tests, such as a two sample t-test, to establish if there was in fact a difference between the starting salaries
+         of males and females. The results of this test showed there was a difference in starting salaries between males and females, which led us to conduct multiple linear regressions.
+         The results of the above process can be found below.'),
       fluidRow(
-        column(6, 
+        column(6,
           img(src = "BoxPlotsStartingYearSalary.png", height = "300px", style = "border: 2px solid black; margin: 20px;", align = 'center'),
           p("This plot shows the starting salaries of faculty members by gender. The box plot shows that the mean for each group is quite similar, though males have 
           far more outliers past the 3rd quartile.")
         ),
-        column(6, 
+        column(6,
           img(src = "HistogramStartingYear.png", height = "300px", style = "border: 2px solid black; margin: 20px;", align = 'center'),
           p("To further understand the underlying data, this bar chart shows the counts associated with multiple salary bands. It is clear again that there are far more outliers in
           the male group. ")
         )
       ),
-      
       br(),
       img(src = "Question2MultipleRegression.png", height = "475px", style = "border: 2px solid black; margin: 20px;", align = 'center'),
       p('After conducting a two sample t-test and deteriming there was a difference between male and female starting salary, we fit 4 linear regression models to test multiple 
-      hypothesis about the factors which were causing the observed difference. We first fit a model with salary as the outcome and sex as the predictor. Then we added factors which
-      our team thought may be contributing to the difference. The following regressions are shown in the table as well as their results. Of note, when accounting for variables such as
-      field, rank, and degree, we found that the stastical significance of sex vanishes. That is to say, we cannot reject the null hypothesis that sex has no effect on salary in each
-      model where we account for predictors beyond sex.'),
+         hypothesis about the factors which were causing the observed difference. We first fit a model with salary as the outcome and sex as the predictor. Then we added factors which
+         our team thought may be contributing to the difference. The following regressions are shown in the table as well as their results. Of note, when accounting for variables such as
+         field, rank, and degree, we found that the stastical significance of sex vanishes. That is to say, we cannot reject the null hypothesis that sex has no effect on salary in each
+         model where we account for predictors beyond sex.'),
       br(),
-
       p('Our team wanted to make sure that our assumptions were met for our linear models. In the below plots we use model 3 to check for normality, linearity, and constant variance.'),
       fluidRow(
         column(6, 
@@ -56,10 +142,8 @@ hired)?"),
           p("Looking at the Residuals vs Fitted Values plot for Model 3, allows us to confirm that our linearity and constant variance assumptions are met."),
         )
       ),
-
       br(),
       p('All of the above analysis is simply to say that we do cannot attribute the difference in salary between male and female faculty members to sex.'),
-    
     ),
 
 
@@ -97,10 +181,87 @@ First we plot the average salary by sex over the time period. It is clear that t
       h4("Conclusion"),
       p("We can conclude from the first model that if men start with higher salaries, they might appear to have smaller percent increases even if they’re receiving larger absolute raises. The the interaction model on absolute salaries over time confirms that men and women do not get different absolute raises over time.")
     ),
+
     tabPanel("4",
       h3("Has sex bias existed in granting promotions from Associate to full Professor?"),
-      p("Empty.")
+      fluidRow(
+        column(12, 
+          h4("How can we approach this question?"),
+          p("Although this is a 'yes or no' question, you might be surprised at some of the underlying complexities you may run into when trying to identify bias.
+            Let's start by narrowing down what sex bias means when considering promotion rates in this scenario. Sex bias means that either women or men (or both, in different ways)
+            have an advantage over the other based on something related directly to their sex, whether it is sex alone or an additional predictor interacting with sex. 
+            However, is it reasonable to consider sex in isoltion while holding any other potential predictors constant? Moreover, if we are specifically focus on sex, 
+            we will need to proportion our data to account for difference in male and female entries, remove any entries that were already listed as Full Professors at the start 
+            of the data collection range, and lastly, we'll need to identiy an adequate time range for mean promotions from associate to full professor to rule out any edge cases and outliers."),
+          p("Caveat: sex data was highly disproportionate with many more male entries than female entries."),
+
+          p("Our data preparation for the analysis and investigation of this question included the following operations:"),
+          tags$ul(
+            tags$li("Removal of entries already starting at full professor job status"),
+            tags$li("Removal of entries with Assistant as their last recorded job status."),
+            tags$li("Removal of premature samples:"),
+              tags$ul(
+                tags$li("When Associate status is carried for less than the average number of 
+                          years that individuals in the dataset require to obtain a promotion."),
+                tags$li("When entries with Associate status are initially recorded at a time
+                         less than one standard deviation from the mean time an individual in the dataset
+                         requires for a promotion.")
+              ),
+            tags$li("Centered the startyr (year career was started) and yeardeg (year degree was obtained) by subtracting the mean 
+                     to produce a better regression and fitting more stable interaction terms.")
+        )
+      ),
+      hr(),
+      
+      fluidRow(
+        column(6, 
+          div(style = "text-align: center;",
+              h4("Promotion Mean Distribution")
+          ),
+          div(style = "text-align: center;",
+              img(src = "q4_promotion_mean.jpeg", width = "70%", height = "30%"),
+              p("Distribution of promotion times across men and women."),
+          )
+        ),
+        column(6, 
+          div(style = "text-align: center;",
+              h4("Promotions Proportions")
+          ),
+          div(style = "text-align: center;",
+              img(src = "q4_promotions_proportions.jpeg", width = "70%", height = "30%"),
+              p("Stacked visualization of amount promoted vs. all by sex."),
+          )
+        )
+      ),
+
+      hr(),
+      
+      # Comparative Visualizations (Two Side by Side)
+      fluidRow(
+        column(6, 
+          h3("Male Salary Distribution"),
+          img(src = "placeholder_image2.png", width = "100%"),
+          p("Description: A breakdown of salary distributions for male employees.")
+        ),
+        column(6, 
+          h3("Female Salary Distribution"),
+          img(src = "placeholder_image3.png", width = "100%"),
+          p("Description: A breakdown of salary distributions for female employees.")
+        )
+      ),
+      hr(),
+      
+      fluidRow(
+        column(12, 
+          h3("Salary Differences Across Roles"),
+          img(src = "placeholder_image4.png", width = "100%"),
+          p("Description: This chart highlights how salary differences manifest across various job roles.")
+        )
+      ),
+      hr(),
     ),
+    ),
+
     tabPanel("Conclusion",
       h3("Conclusion"),
       p("TODO: Add summary of our findings in a qualitative manner that finishes telling the story.")
