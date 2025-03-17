@@ -257,8 +257,8 @@ ui <- fluidPage(
                
                tags$li("More experienced faculty tend to have smaller percent increases."),
                
-               tags$li("Having an administrative role significantly increases percent increases in salary. "),
-              
+               tags$li("Having an administrative role significantly increases percent increases in salary. ")
+              ),
              h5("Analyzing Impact of Salary Gap"),
              p("Given the interesting results of the model, we decided to investigate if the results are due to men starting at higher salaries. We also want to follow up from the first model on whether experienced faculty tend to have smaller percent increases, which is consistent with diminishing returns over time.
     First, we plot the average salary by sex over the time period. It is clear that the average salary is much higher for men than women."),
