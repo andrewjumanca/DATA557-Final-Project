@@ -251,28 +251,15 @@ ui <- fluidPage(
              This effect is statistically significant at the 0.01 level, indicating strong evidence that men received smaller percentage increases in salary. 
              The 95% confidence interval (-3.49, -0.71) excludes zero, reinforcing the significance of this result."),
                
-               tags$li("Promotions to higher rank (Associate and Full) are strongly associated with higher salary increases. 
-             Being promoted to Associate rank is associated with a 4.88% increase (p < 0.001), and being promoted to Full rank is associated with a 7.49% increase (p < 0.001). 
-             Both confidence intervals (2.71, 7.06) and (5.23, 9.76) exclude zero, confirming these effects are statistically significant."),
+               tags$li("Promotions to higher rank (Associate and Full) are strongly associated with higher salary increases."),
                
-               tags$li("Professional degrees are associated with smaller raises due to higher starting salaries. 
-             Faculty with professional degrees had 4.02% smaller increases on average (p = 0.01). 
-             The confidence interval (-7.07, -0.96) excludes zero, supporting this conclusion."),
+               tags$li("Professional degrees are associated with smaller raises due to higher starting salaries."),
                
-               tags$li("More experienced faculty tend to have smaller percent increases. 
-             Each additional year of experience is associated with a -0.38% decrease in salary increases (p < 0.001). 
-             The 95% confidence interval (-0.46, -0.30) excludes zero, indicating this is a strong negative relationship."),
+               tags$li("More experienced faculty tend to have smaller percent increases."),
                
-               tags$li("Having an administrative role significantly increases percent increases in salary. 
-             Faculty with administrative roles saw 5.57% higher salary increases (p < 0.001). 
-             The 95% confidence interval (4.03, 7.11) excludes zero, confirming the positive effect of administrative duties."),
+               tags$li("Having an administrative role significantly increases percent increases in salary.")
                
-               tags$li("Professional fields show smaller percentage increases. 
-             Faculty in professional fields had 2.36% smaller increases (p = 0.03), with a confidence interval (-4.45, -0.26) excluding zero. 
-             This suggests a moderate but significant difference in salary increases between professional and non-professional fields."),
-               
-               tags$li("Having an administrative role significantly increases percent increases in salary. ")
-              ),
+               ),
              h5("Analyzing Impact of Salary Gap"),
              p("Given the interesting results of the model, we decided to investigate if the results are due to men starting at higher salaries. We also want to follow up from the first model on whether experienced faculty tend to have smaller percent increases, which is consistent with diminishing returns over time.
     First, we plot the average salary by sex over the time period. It is clear that the average salary is much higher for men than women."),
