@@ -94,7 +94,21 @@ ui <- fluidPage(
   tabsetPanel(
     tabPanel("Intro",
       h3("Introduction"),
-      p("TODO: Introduction paragraphs explaining data, motivation for analysis, explanation for why we chose the methods we did, and anything else needed to introduce the readers.")
+      p("The following data story is a record of our investigation into how university faculty salaries differ, if at all, when considering factors such as sex, highest degree attained, rank, and other variables. 
+        Differences between the salaries of male and female faculty members at US universities are well documented. There are many differences that may account for differences in salary including experience, time in a role, rank, degree and responsibilities. The data that was provided to help investigate whether the difference in salary is due to sex, contains 19792 records on 1597 faculty members employed at an unknown university in 1995. The variables available for this analysis included sex, highest degree attained, year of highest degree, field, year hired, rank and administrative duties. 
+        The data provided will be used to investigate the following four questions in more depth."),
+      br(),
+      tags$ol(
+        tags$li("Does sex bias exist at the university in the most current year available (1995)?"),
+        tags$li("Has sex bias existed in the starting salaries of faculty members (salaries in the year hired)?"),
+        tags$li("Has sex bias existed in granting salary increases between 1990-1995?"),
+        tags$li("Has sex bias existed in granting promotions from Associate to Full Professor?")
+      ),
+      br(),
+      p('Our methods for each question are well documented in each of the following tabs, but as an overview our team used statistical methods such as a two-sample t-test, linear regressions and logistic regressions to answer the questions.
+        '),
+      br(),
+      p('Each tab also gives an overview of our results for each question with final results and takeaways being found in the conclusion tab.'),
     ),
     tabPanel("1",
       h3("Does sex bias exist at the university in the most current year available (1995)?"),
@@ -106,11 +120,12 @@ ui <- fluidPage(
     tabPanel("2", style = "background-color: #f1f1f1;",
       h3(class = 'tab-title', "Has sex bias existed in the starting salaries of faculty members (salaries in the year
         hired)?"),
+      h4('Introduction'),
       p('The following page uses a variety of analysis techniques to understand if sex bias existed in the starting salaries of faculty members. 
          First, we understand set out to understand the data. Through the use of visualizations and tables, our team built an understanding of the starting salary data
-         that was available to us. We then used statistical tests, such as a two sample t-test, to establish if there was in fact a difference between the starting salaries
-         of males and females. The results of this test showed there was a difference in starting salaries between males and females, which led us to conduct multiple linear regressions.
-         The results of the above process can be found below.'),
+         that was available to us.'),
+      h4('Analysis'),
+      p('Before diving into advanced statistical methods, we sought to understand the data by using box plots and bar graphs as well as general statistics.'),
       fluidRow(
         column(6,
           img(src = "BoxPlotsStartingYearSalary.png", height = "300px", style = "border: 2px solid black; margin: 20px;", align = 'center'),
@@ -123,6 +138,10 @@ ui <- fluidPage(
           the male group. ")
         )
       ),
+      h4('Methods'),
+      p('We used statistical tests, such as a two sample t-test, to establish if there was in fact a difference between the starting salaries
+         of males and females. The results of this test showed there was a difference in starting salaries between males and females, which led us to conduct multiple linear regressions.
+         The results of the above process can be found below.'),
       br(),
       img(src = "Question2MultipleRegression.png", height = "475px", style = "border: 2px solid black; margin: 20px;", align = 'center'),
       p('After conducting a two sample t-test and deteriming there was a difference between male and female starting salary, we fit 4 linear regression models to test multiple 
@@ -143,7 +162,8 @@ ui <- fluidPage(
         )
       ),
       br(),
-      p('All of the above analysis is simply to say that we do cannot attribute the difference in salary between male and female faculty members to sex.'),
+      h4('Conclusion'),
+      p('All of the above analysis is simply to say that we do cannot attribute the difference in salary between male and female faculty members to sex for the starting year salaries.'),
     ),
 
 
