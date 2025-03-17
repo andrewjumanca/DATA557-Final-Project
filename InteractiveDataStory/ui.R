@@ -211,7 +211,7 @@ ui <- fluidPage(
              p("For this analysis, we are interested in assessing if sex bias exists in granting salary increases between 1990-1995. We look answer two questions to cover this topic. 1. Do men and women receive different percentage raises? 2. Do men and women receive different absolute raises over time?"),
              
              h4("Methods"),
-             p("To address the two questions above, we use a start with exploratory data analysis and then use multiple linear regression for two different models to address each question specifically. First, we fit a multiple linear regression model with percent increase in salary as the outcome and included the following covariates:"),
+             p("To address the two questions above, We start with exploratory data analysis and then use multiple linear regression for two different models to address each question specifically. First, we fit a multiple linear regression model with percent increase in salary as the outcome and included the following covariates:"),
              tags$ul(
                tags$li("Sex"),
                tags$li("Administrative duties"),
