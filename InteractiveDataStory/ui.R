@@ -95,7 +95,7 @@ ui <- fluidPage(
       display: table;
     "))
   ),
-  h1("Unequal Pay? Exploring Faculty Salaries by Gender and Rank"),
+  h1("Does Gender Bias Exist in University Faculty Salaries and Promotions? A Statistical Investigation"),
   tabsetPanel(
     tabPanel("Intro",
       h3("Introduction"),
@@ -349,39 +349,71 @@ ui <- fluidPage(
           
       ),
       hr(),
-      
-      h4("Methods"),
-      h4("Conclusion"),
-      p("Without the predictor of sex included, we essentially get random guesses as results, based on ROC and PR curves.
-        Including sex as a predictor makes it the most significant term (p-value of 0) in our multi-logistic regression model, with 
-        the next most significant terms are degree type and yeardeg. With all terms and interactions: sex (most significant), sex/startyear (pos), and sex/yrdeg (neg) are equally significant"),
+
+      fluidRow(
+        column(6, 
+          div(style = "text-align: center;",
+              h4("ROC - multi logit")
+          ),
+          div(style = "text-align: center;",
+              img(src = "q4_ROC_all.jpeg", width = "90%", height = "30%"),
+              p("Receiver Operating Characteristic (false positive vs. true positive)"),
+          )
+        ),
+        column(6, 
+          div(style = "text-align: center;",
+              h4("PR - multi logit")
+          ),
+          div(style = "text-align: center;",
+              img(src = "q4_PR_all.jpeg", width = "90%", height = "30%"),
+              p("Precision-Recall"),
+          )
+        ),
       ),
 
       fluidRow(
         column(6, 
           div(style = "text-align: center;",
-              h4("ROC")
+              h4("ROC - logit (only sex)")
           ),
           div(style = "text-align: center;",
-              img(src = "q4_promotion_mean.jpeg", width = "70%", height = "30%"),
-              p("Distribution of promotion times across men and women."),
+              img(src = "q4_ROC_sex.jpeg", width = "90%", height = "30%"),
+              p("Receiver Operating Characteristic (false positive vs. true positive)"),
           )
         ),
         column(6, 
           div(style = "text-align: center;",
-              h4("PR")
+              h4("PR - logit (only sex)")
           ),
           div(style = "text-align: center;",
-              img(src = "q4_promotions_proportions.jpeg", width = "70%", height = "30%"),
-              p("Stacked visualization of amount promoted vs. all by sex."),
+              img(src = "q4_PR_sex.jpeg", width = "90%", height = "30%"),
+              p("Precision-Recall"),
           )
         ),
+      ),
+
+      h3("Methods"),
+      p("Our statistical methods began by performing extensive data filteration, including removal of empty or pre-mature values and variable centering. 
+      We used mean time frames for promotion to get a more accurate estimate of promotion likelihood and to avoid any confouding variables. 
+      Our regression model leveraged a multiple logistic regression, which first came from an initial simple logistic regression using only one predictor (sex)."),
+      p("The use of ROC and PR curves enabled us to discover a deeper meaning behind the influence of sex as a predictor, showing us that statistical significance for a single 
+         predictor alone does  not fully explain the data. With a more holistic model incorporating additional predictors to explain variance, we achieve a more ideal 
+         ROC curve."),
+
+      h4("Conclusion"),
+      p("Without the predictor of sex included, we essentially get random guesses as results, based on ROC and PR curves.
+        Including sex as a predictor makes it the most significant term (p-value of 0) in our multi-logistic regression model, with 
+        the next most significant terms are degree type and yeardeg. With all terms and interactions: sex (most significant), sex/startyear (pos), and sex/yrdeg (neg) are equally significant"),
       ),
     ),
 
     tabPanel("Conclusion",
       h3("Conclusion"),
-      p("TODO: Add summary of our findings in a qualitative manner that finishes telling the story.")
+      p("Overall, our statistical analysis reveals a complex, multifaceted picture regarding sex bias in university salary and promotion practices. 
+         In 1995, male faculty consistently earned more than female faculty across all ranks, even after accounting for factors such as academic field, 
+         experience, and educational background. In contrast, an examination of starting salaries shows that once we adjust for field, rank, and degree type, 
+         the apparent gender differences disappear—suggesting that initial pay is set using standard, equitable practices. When assessing salary increases between 
+         1990 and 1995, we found that while women tend to show higher percentage gains, this is largely due to men’s higher starting salaries; the absolute raise amounts are comparable across genders. Finally, our analysis of promotions from Associate to Full Professor indicates that gender alone does not significantly predict advancement. However, interactions with hiring and graduation dates hint at subtle differences in promotion outcomes that may reflect underlying structural biases. Together, these findings underscore the importance of regularly reviewing and refining institutional policies—ensuring that cost-of-living adjustments, merit-based raises, and promotion criteria are applied equitably across genders to maintain fair employment practices.")
     )
   )
 )
