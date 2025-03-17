@@ -88,6 +88,10 @@ ui <- fluidPage(
           padding-right: 10px;
         }
       }
+
+      .shiny-table {
+      margin: 0 auto;
+      display: table;
     "))
   ),
   titlePanel("Unequal Pay? Exploring Faculty Salaries by Gender and Rank"),
@@ -112,7 +116,31 @@ ui <- fluidPage(
     ),
     tabPanel("1",
       h3("Does sex bias exist at the university in the most current year available (1995)?"),
-      p("Empty.")
+      p("For this analysis, we will examine whether a sex-based salary disparity exists in the most recent year of available data. We'll use several various statistical tests and regression modeling to find out whether male and female faculty members receive significantly different salaries based on a sex bias."),
+      br(),
+      h4("Mean Salaries by Sex and Job Status"),
+      tableOutput("summary_table"),
+
+      h4("T-Test Analysis"),
+      p("We'll start by performing a Welch Two Sample t-test to compare the average salaries of male and female faculty members.
+         The t-tests compare the average salaries of male and female faculty members at each rank (Assistant, Associate, and Full Professors) 
+         in 1995 to determine if significant salary differences exist."),
+      tableOutput("salary_analysis_table"),
+      
+      h4("Key Takeaways:"),
+      tags$ul(
+        tags$li("A significant gender pay gap exists at all ranks, but it increases as faculty move up the career ladder."),
+        tags$li("Assistant Professors have a small salary gap, suggesting more equal starting salaries."),
+        tags$li("Associate Professors show a widening gap, indicating that men receive larger salary increases."),
+        tags$li("Full Professors have the largest gap, suggesting that over time, the gender disparity in pay becomes substantial.")
+      ),
+      
+      h4("Multiple Regression: Salary ~ Sex + rank + field + experience"),
+      p(""),
+      verbatimTextOutput("regressionSummary"),
+      
+      h4("Conclusion"),
+      p("Our findings indicate a statistically significant gender pay gap, with male faculty members earning higher salaries on average. The gap increases at higher ranks, suggesting that salary disparities persist and may widen over time.")
     ),
 
 
@@ -206,7 +234,7 @@ First we plot the average salary by sex over the time period. It is clear that t
       h3("Has sex bias existed in granting promotions from Associate to full Professor?"),
       fluidRow(
         column(12, 
-          h4("How can we approach this question?"),
+          h4("Introduction"),
           p("Although this is a 'yes or no' question, you might be surprised at some of the underlying complexities you may run into when trying to identify bias.
             Let's start by narrowing down what sex bias means when considering promotion rates in this scenario. Sex bias means that either women or men (or both, in different ways)
             have an advantage over the other based on something related directly to their sex, whether it is sex alone or an additional predictor interacting with sex. 
@@ -215,6 +243,7 @@ First we plot the average salary by sex over the time period. It is clear that t
             of the data collection range, and lastly, we'll need to identiy an adequate time range for mean promotions from associate to full professor to rule out any edge cases and outliers."),
           p("Caveat: sex data was highly disproportionate with many more male entries than female entries."),
 
+          h4("Statistical Analysis"),
           p("Our data preparation for the analysis and investigation of this question included the following operations:"),
           tags$ul(
             tags$li("Removal of entries already starting at full professor job status"),
@@ -251,7 +280,9 @@ First we plot the average salary by sex over the time period. It is clear that t
               img(src = "q4_promotions_proportions.jpeg", width = "70%", height = "30%"),
               p("Stacked visualization of amount promoted vs. all by sex."),
           )
-        )
+        ),
+        h4("Methods"),
+        h4("Conclusion")
       ),
 
       hr(),
@@ -278,8 +309,8 @@ First we plot the average salary by sex over the time period. It is clear that t
           p("Description: This chart highlights how salary differences manifest across various job roles.")
         )
       ),
-      hr(),
-    ),
+      hr()
+    )
     ),
 
     tabPanel("Conclusion",

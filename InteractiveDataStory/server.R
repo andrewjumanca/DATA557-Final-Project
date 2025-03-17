@@ -177,4 +177,22 @@ server <- function(input, output) {
     )
     confint(model)
   })
+
+  output$summary_table <- renderTable({
+    data.frame(
+      Rank = c("Assistant", "Associate", "Full"),
+      Mean_Salary_Female = c(4502.89, 5018.92, 6839.72),
+      Mean_Salary_Male = c(4773.80, 5480.49, 7714.85),
+      Difference = c(270.91, 461.57, 875.13)
+    )
+  })
+
+  output$salary_analysis_table <- renderTable({
+    data.frame(
+      t_value = c("-2.2913", "-4.5374", "-5.9529"),
+      Degrees_of_Freedom = c("312.71", "366.55", "214.31"),
+      p_value = c("0.0226", "7.73e-06", "1.065e-08"),
+      Confidence_Interval_95 = c("[-503.55, -38.28]", "[-661.61, -261.53]", "[-1164.89, -585.35]")
+    )
+  }, rownames = FALSE)
 }
