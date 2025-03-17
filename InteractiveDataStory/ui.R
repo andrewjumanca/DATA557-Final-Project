@@ -431,5 +431,11 @@ ui <- fluidPage(
          the apparent gender differences disappear—suggesting that initial pay is set using standard, equitable practices. When assessing salary increases between 
          1990 and 1995, we found that while women tend to show higher percentage gains, this is largely due to men’s higher starting salaries; the absolute raise amounts are comparable across genders. Finally, our analysis of promotions from Associate to Full Professor indicates that gender alone does not significantly predict advancement. However, interactions with hiring and graduation dates hint at subtle differences in promotion outcomes that may reflect underlying structural biases. Together, these findings underscore the importance of regularly reviewing and refining institutional policies—ensuring that cost-of-living adjustments, merit-based raises, and promotion criteria are applied equitably across genders to maintain fair employment practices.")
     )
+  ),
+  tags$footer(
+    div(style = "width: 100%; text-align: center; background-color: #f8f9fa; padding: 15px; border-top: 1px solid #ddd; margin-top: 20px;",
+        "Created for University of Washington DATA 557 by Arnav Dixit, Andrew Jumanca, Johnny Liang, Jacob Miller, Ryan Richards, and John Tielelli | March 16th 2025.
+"
+    )
   )
 )
