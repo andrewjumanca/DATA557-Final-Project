@@ -251,31 +251,14 @@ ui <- fluidPage(
              This effect is statistically significant at the 0.01 level, indicating strong evidence that men received smaller percentage increases in salary. 
              The 95% confidence interval (-3.49, -0.71) excludes zero, reinforcing the significance of this result."),
                
-               tags$li("Promotions to higher rank (Associate and Full) are strongly associated with higher salary increases. 
-             Being promoted to Associate rank is associated with a 4.88% increase (p < 0.001), and being promoted to Full rank is associated with a 7.49% increase (p < 0.001). 
-             Both confidence intervals (2.71, 7.06) and (5.23, 9.76) exclude zero, confirming these effects are statistically significant."),
+               tags$li("Promotions to higher rank (Associate and Full) are strongly associated with higher salary increases."),
                
-               tags$li("Professional degrees are associated with smaller raises due to higher starting salaries. 
-             Faculty with professional degrees had 4.02% smaller increases on average (p = 0.01). 
-             The confidence interval (-7.07, -0.96) excludes zero, supporting this conclusion."),
+               tags$li("Professional degrees are associated with smaller raises due to higher starting salaries."),
                
-               tags$li("More experienced faculty tend to have smaller percent increases. 
-             Each additional year of experience is associated with a -0.38% decrease in salary increases (p < 0.001). 
-             The 95% confidence interval (-0.46, -0.30) excludes zero, indicating this is a strong negative relationship."),
+               tags$li("More experienced faculty tend to have smaller percent increases."),
                
-               tags$li("Having an administrative role significantly increases percent increases in salary. 
-             Faculty with administrative roles saw 5.57% higher salary increases (p < 0.001). 
-             The 95% confidence interval (4.03, 7.11) excludes zero, confirming the positive effect of administrative duties."),
-               
-               tags$li("Professional fields show smaller percentage increases. 
-             Faculty in professional fields had 2.36% smaller increases (p = 0.03), with a confidence interval (-4.45, -0.26) excluding zero. 
-             This suggests a moderate but significant difference in salary increases between professional and non-professional fields."),
-               
-               tags$li("Total observations: More observations are strongly associated with larger percent increases. 
-             Each additional year observed is associated with a 5.61% increase (p < 0.001). 
-             The confidence interval (4.82, 6.40) excludes zero, indicating a robust relationship between years observed and salary increases.")
-             ),
-             
+               tags$li("Having an administrative role significantly increases percent increases in salary. "),
+              
              h5("Analyzing Impact of Salary Gap"),
              p("Given the interesting results of the model, we decided to investigate if the results are due to men starting at higher salaries. We also want to follow up from the first model on whether experienced faculty tend to have smaller percent increases, which is consistent with diminishing returns over time.
     First, we plot the average salary by sex over the time period. It is clear that the average salary is much higher for men than women."),
@@ -289,23 +272,8 @@ ui <- fluidPage(
              verbatimTextOutput("confNewModel"),
              h5("Key Findings and Interpretation of the Model"),
              tags$ul(
-               tags$li("Base salary in the reference group is estimated at $2501.96 (p < 0.001), with a confidence interval of ($2344.12, $2659.81), confirming that the intercept is precisely estimated."),
                
                tags$li("Year is positively associated with salary increases. Each additional year is linked to an increase of $123.93 (p < 0.001), with a confidence interval of ($90.56, $157.30), indicating strong evidence of year-over-year salary growth."),
-               
-               tags$li("Male faculty members had significantly higher base salaries than female faculty members. The coefficient for male faculty is $246.49 (p < 0.001), with a confidence interval of ($123.72, $369.26), suggesting that men tend to have higher starting salaries."),
-               
-               tags$li("Promotions to higher rank are strongly associated with higher salaries. Promotion to Associate rank is linked to a $441.82 increase (p < 0.001), while promotion to Full rank corresponds to a $1993.83 increase (p < 0.001). The confidence intervals ($352.68, $530.96) and ($1889.30, $2098.36) confirm that these effects are large and statistically significant."),
-               
-               tags$li("Having a PhD or professional degree is positively associated with salary. A PhD increases salary by $430.89 (p < 0.001) and a professional degree increases salary by $913.17 (p < 0.001). The confidence intervals ($326.36, $535.43) and ($764.58, $1061.76) confirm that the degree effects are significant and substantial."),
-               
-               tags$li("Faculty working in professional fields earn more on average. Faculty in professional fields earn $1615.37 more (p < 0.001) than those in the reference category. The confidence interval ($1514.66, $1716.07) confirms the strength of this effect."),
-               
-               tags$li("Faculty in 'Other' fields earn $669.67 more than the reference category (p < 0.001), with a confidence interval of ($586.57, $752.77), confirming the positive effect."),
-               
-               tags$li("Holding an administrative role is associated with a $1017.64 salary increase (p < 0.001). The confidence interval ($927.93, $1107.35) indicates that this effect is precisely estimated."),
-               
-               tags$li("Experience is positively associated with salary increases. Each additional year of experience adds $26.24 to salary (p < 0.001), with a confidence interval of ($21.93, $30.55), confirming a consistent and significant effect."),
                
                tags$li("The interaction term between sex and year is not statistically significant (β = 28.74, p = 0.14). The confidence interval (-9.39, 66.86) includes zero, suggesting that the rate of salary increase over time does not differ significantly between men and women.")
              ),
