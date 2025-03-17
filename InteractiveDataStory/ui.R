@@ -1,4 +1,5 @@
 library(shiny)
+library(DT)
 
 ui <- fluidPage(
   tags$head(
@@ -94,7 +95,7 @@ ui <- fluidPage(
       display: table;
     "))
   ),
-  titlePanel("Unequal Pay? Exploring Faculty Salaries by Gender and Rank"),
+  h1("Unequal Pay? Exploring Faculty Salaries by Gender and Rank"),
   tabsetPanel(
     tabPanel("Intro",
       h3("Introduction"),
@@ -124,8 +125,13 @@ ui <- fluidPage(
     ),
     tabPanel("1",
       h3("Does sex bias exist at the university in the most current year available (1995)?"),
+      h3("Introduction"),
       p("For this analysis, we will examine whether a sex-based salary disparity exists in the most recent year of available data. We'll use several various statistical tests and regression modeling to find out whether male and female faculty members receive significantly different salaries based on a sex bias."),
-      br(),
+
+      h3("Analysis"),
+      p("To set the stage for a thorough analysis of the proposed question and the data, we
+         we'll use some visualizations and tables to better understand how the data is distributed. Below we have box plots showing the interquartile ranges and medians of each sex acrossall ranks."),
+      img(src = "q1_ranksalary_boxplot.png", height = "300px", style = "border: 2px solid black; margin: 20px;", align = 'center'),
       h4("Mean Salaries by Sex and Job Status"),
       tableOutput("summary_table"),
 
@@ -135,23 +141,22 @@ ui <- fluidPage(
          in 1995 to determine if significant salary differences exist."),
       tableOutput("salary_analysis_table"),
       
+      h3("Methods"),
+      p("Our methods for this question included the use of boxplot visualization containing the IQR and mean."),
+      p("Furthemore, the two-sample Welch test was used to understand the statistical significance of sex in relation to salary, and confirm that the disparity varies by rank."),
+
+
+      h3("Conclusion"),
+      
       h4("Key Takeaways:"),
+      p("Our findings indicate a statistically significant gender pay gap, with male faculty members earning higher salaries on average. The gap increases at higher ranks, suggesting that salary disparities persist and may widen over time."),
       tags$ul(
         tags$li("A significant gender pay gap exists at all ranks, but it increases as faculty move up the career ladder."),
         tags$li("Assistant Professors have a small salary gap, suggesting more equal starting salaries."),
         tags$li("Associate Professors show a widening gap, indicating that men receive larger salary increases."),
         tags$li("Full Professors have the largest gap, suggesting that over time, the gender disparity in pay becomes substantial.")
-      ),
-      
-      h4("Multiple Regression: Salary ~ Sex + rank + field + experience"),
-      p(""),
-      verbatimTextOutput("regressionSummary"),
-      
-      h4("Conclusion"),
-      p("Our findings indicate a statistically significant gender pay gap, with male faculty members earning higher salaries on average. The gap increases at higher ranks, suggesting that salary disparities persist and may widen over time.")
+      )
     ),
-
-
 
     tabPanel("2", style = "background-color: #f1f1f1;",
       h3(class = 'tab-title', "Has sex bias existed in the starting salaries of faculty members (salaries in the year
@@ -324,7 +329,7 @@ ui <- fluidPage(
             of the data collection range, and lastly, we'll need to identiy an adequate time range for mean promotions from associate to full professor to rule out any edge cases and outliers."),
           p("Caveat: sex data was highly disproportionate with many more male entries than female entries."),
 
-          h4("Statistical Analysis"),
+          h3("Analysis"),
           p("Our data preparation for the analysis and investigation of this question included the following operations:"),
           tags$ul(
             tags$li("Removal of entries already starting at full professor job status"),
@@ -339,10 +344,8 @@ ui <- fluidPage(
               ),
             tags$li("Centered the startyr (year career was started) and yeardeg (year degree was obtained) by subtracting the mean 
                      to produce a better regression and fitting more stable interaction terms.")
-        )
-      ),
-      hr(),
-      
+          ),
+
       fluidRow(
         column(6, 
           div(style = "text-align: center;",
@@ -362,36 +365,50 @@ ui <- fluidPage(
               p("Stacked visualization of amount promoted vs. all by sex."),
           )
         ),
-        h4("Methods"),
-        h4("Conclusion")
       ),
 
+          h4("Logistic Regression"),
+          p("Since we've broken up our data by those who have and have not received a promotion within the mean time span, it makes sense to 
+             use a logistic regression model here, as the outcome we want to predict is binary. Given the sex of a data entry (and possibly 
+             other values), how accurately can we predict whether that person has gotten a promotion within the mean time frame?"),
+          p("Our model results are as follows, incorporating sex, field, job start year, degree completion year, and a few interaction terms:"),
+          DTOutput("logit_table"),
+
+          p("Our results look promising, with several key predictors turning out to be statistically significant, including sex and all of its interaction terms."),
+          p("While we also considered a model with just sex as the predictor, the following ROC and PR curves will show why this was not an ideal choice 
+             to use as our final statistical test. A ROC (Receiver Operating Characteristic) and PR (Precision-Recall) curves focus on visualizing the tradeoff between 
+             true positive and false positive rate, while PR focuses on the trade-off between precision and recall when predicting."),
+          
+      ),
       hr(),
       
-      # Comparative Visualizations (Two Side by Side)
+      h4("Methods"),
+      h4("Conclusion"),
+      p("Without the predictor of sex included, we essentially get random guesses as results, based on ROC and PR curves.
+        Including sex as a predictor makes it the most significant term (p-value of 0) in our multi-logistic regression model, with 
+        the next most significant terms are degree type and yeardeg. With all terms and interactions: sex (most significant), sex/startyear (pos), and sex/yrdeg (neg) are equally significant"),
+      ),
+
       fluidRow(
         column(6, 
-          h3("Male Salary Distribution"),
-          img(src = "placeholder_image2.png", width = "100%"),
-          p("Description: A breakdown of salary distributions for male employees.")
+          div(style = "text-align: center;",
+              h4("ROC")
+          ),
+          div(style = "text-align: center;",
+              img(src = "q4_promotion_mean.jpeg", width = "70%", height = "30%"),
+              p("Distribution of promotion times across men and women."),
+          )
         ),
         column(6, 
-          h3("Female Salary Distribution"),
-          img(src = "placeholder_image3.png", width = "100%"),
-          p("Description: A breakdown of salary distributions for female employees.")
-        )
+          div(style = "text-align: center;",
+              h4("PR")
+          ),
+          div(style = "text-align: center;",
+              img(src = "q4_promotions_proportions.jpeg", width = "70%", height = "30%"),
+              p("Stacked visualization of amount promoted vs. all by sex."),
+          )
+        ),
       ),
-      hr(),
-      
-      fluidRow(
-        column(12, 
-          h3("Salary Differences Across Roles"),
-          img(src = "placeholder_image4.png", width = "100%"),
-          p("Description: This chart highlights how salary differences manifest across various job roles.")
-        )
-      ),
-      hr()
-    )
     ),
 
     tabPanel("Conclusion",

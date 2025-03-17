@@ -189,10 +189,26 @@ server <- function(input, output) {
 
   output$salary_analysis_table <- renderTable({
     data.frame(
+      Rank = c("Assistant", "Associate", "Full"),
       t_value = c("-2.2913", "-4.5374", "-5.9529"),
       Degrees_of_Freedom = c("312.71", "366.55", "214.31"),
       p_value = c("0.0226", "7.73e-06", "1.065e-08"),
       Confidence_Interval_95 = c("[-503.55, -38.28]", "[-661.61, -261.53]", "[-1164.89, -585.35]")
     )
   }, rownames = FALSE)
+
+  data <- data.frame(
+    Variable = c("deg_ord", "field_ord", "sex_ord", "startyr_centered", "yrdeg_centered", 
+                 "inter_sex_startyr", "inter_sex_yrdeg", "inter_sex_deg", "inter_sex_field"),
+    Coef = c(0.0929, 0.3860, 1.0154, -0.0550, 0.0233, 0.0778, -0.0845, -0.4934, -0.3092),
+    `Std. Err` = c(0.360, 0.226, 0.119, 0.040, 0.042, 0.046, 0.049, 0.395, 0.253),
+    Z = c(0.258, 1.709, 8.540, -1.365, 0.552, 1.705, -1.708, -1.248, -1.223),
+    `P>|z|` = c(0.796, 0.087, 0.000, 0.172, 0.581, 0.088, 0.088, 0.212, 0.221),
+    `Conf. Interval (0.025)` = c(-0.613, -0.057, 0.782, -0.134, -0.059, -0.012, -0.181, -1.268, -0.804),
+    `Conf. Interval (0.975)` = c(0.799, 0.829, 1.248, -0.024, 0.106, 0.167, -0.012, -0.282, -0.186)
+  )
+  
+  output$logit_table <- renderDT({
+    datatable(data, options = list(pageLength = 10, scrollX = TRUE))
+  })
 }

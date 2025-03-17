@@ -5,6 +5,6 @@ account: ajumanca
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 14258857
-bundleId: 9953094
+bundleId: 9953579
 url: https://ajumanca.shinyapps.io/interactivedatastory/
 version: 1
